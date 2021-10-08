@@ -1,0 +1,6 @@
+#include "mediatek/mt6785.dtsi"
+
+/ {
+        model = "BEGONIA";
+        compatible = "mediatek,MT6785";
+};
