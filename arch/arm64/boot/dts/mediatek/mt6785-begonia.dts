@@ -209,6 +209,13 @@
 			alignment = <0 0x1000>;
 			alloc-ranges = <0 0x40000000 0 0x40000000>;
 		};
+
+		ramoops@4d010000 {
+       	        	compatible = "ramoops";
+        		reg = <0 0x4d010000 0 0xe0000>;
+                	record-size = <0x4000>;
+                	console-size = <0x4000>;
+		};
 	};
 
 	gic: interrupt-controller {
