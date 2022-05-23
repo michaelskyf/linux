@@ -1,16 +1,18 @@
-// SPDX-License-Identifier: GPL-2.0-only
+/dts-v1/;
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 
 / {
 	model = "Xiaomi Redmi Note 8 Pro";
-	compatible = "xiaomi,begonia", "mediatek,mt6785"
+	compatible = "xiaomi,begonia", "mediatek,mt6785";
 
 	interrupt-parent = <&sysirq>;
 	#address-cells = <2>;
 	#size-cells = <2>;
 
 	chosen {
+		#address-cells = <2>;
+		#size-cells = <2>;
 		bootargs = "";
 
 		stdout-path = "framebuffer0";
@@ -20,7 +22,7 @@
 			reg = <0 0x7e605000 0 0x017e8000>; /* xiaomi-mt6785-common.dtsi */
 			width = <1080>;
 			height = <2340>;
-			stride = <1080 * 4>;
+			stride = <(1080 * 4)>;
 			format = "a8b8g8r8";
 			status = "okay";
 		};
@@ -30,7 +32,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		cpu0: cpu@000 {
+		cpu0: cpu@0 {
 			device_type = "cpu";
 			compatible = "arm,cortex-a55";
 			reg = <0x0>;
