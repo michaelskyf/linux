@@ -1,0 +1,265 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+/ {
+	model = "Xiaomi Redmi Note 8 Pro";
+	compatible = "xiaomi,begonia", "mediatek,mt6785"
+
+	interrupt-parent = <&sysirq>;
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	chosen {
+		bootargs = "";
+
+		stdout-path = "framebuffer0";
+
+		framebuffer0: framebuffer@7e605000 {
+			compatible = "simple-framebuffer";
+			reg = <0 0x7e605000 0 0x017e8000>; /* xiaomi-mt6785-common.dtsi */
+			width = <1080>;
+			height = <2340>;
+			stride = <1080 * 4>;
+			format = "a8b8g8r8";
+			status = "okay";
+		};
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu0: cpu@000 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a55";
+			reg = <0x0>;
+			enable-method = "psci";
+			clock-frequency = <1701000000>;
+		};
+
+		cpu1: cpu@100 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a55";
+			reg = <0x100>;
+			enable-method = "psci";
+			clock-frequency = <1701000000>;
+		};
+
+		cpu2: cpu@200 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a55";
+			reg = <0x200>;
+			enable-method = "psci";
+			clock-frequency = <1701000000>;
+		};
+
+		cpu3: cpu@300 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a55";
+			reg = <0x300>;
+			enable-method = "psci";
+			clock-frequency = <1701000000>;
+		};
+
+		cpu4: cpu@400 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a55";
+			reg = <0x400>;
+			enable-method = "psci";
+			clock-frequency = <1701000000>;
+		};
+
+		cpu5: cpu@500 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a55";
+			reg = <0x500>;
+			enable-method = "psci";
+			clock-frequency = <1701000000>;
+		};
+
+		cpu6: cpu@600 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a75";
+			reg = <0x600>;
+			enable-method = "psci";
+			clock-frequency = <2171000000>;
+		};
+
+		cpu7: cpu@700 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a75";
+			reg = <0x700>;
+			enable-method = "psci";
+			clock-frequency = <2171000000>;
+		};
+
+		cpu-map {
+			cluster0 {
+				core0 {
+					cpu = <&cpu0>;
+				};
+				core1 {
+					cpu = <&cpu1>;
+				};
+				core2 {
+					cpu = <&cpu2>;
+				};
+				core3 {
+					cpu = <&cpu3>;
+				};
+				core4 {
+					cpu = <&cpu4>;
+				};
+				core5 {
+					cpu = <&cpu5>;
+				};
+			};
+			cluster1 {
+				core0 {
+					cpu = <&cpu6>;
+				};
+				core1 {
+					cpu = <&cpu7>;
+				};
+			};
+		};
+	};
+
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+	};
+
+	pmu {
+		compatible = "arm,armv8-pmuv3";
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+	};
+
+	dsu-pmu-0 {
+		compatible = "arm,dsu-pmu";
+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+		cpus = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>,
+			<&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0 0x40000000 0 0x3e605000>;
+	};
+
+	reserved_memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		reserve-memory-ssmr {
+			no-map;
+			size = <0 0x1000>;
+			alloc-ranges = <0 0xc0000000 4 0x00000000>;
+		};
+
+		zmc-default {
+			size = <0 0x2d000000>;
+			alignment = <0 0x1000000>;
+			alloc-ranges = <0 0xc0000000 4 0x00000000>;
+		};
+
+		reserve-memory-sspm_share {
+			no-map;
+			status = "okay";
+			size = <0 0x510000>;
+			alignment = <0 0x10000>;
+			alloc-ranges = <0 0x40000000 0 0x60000000>;
+		};
+
+		reserve-memory-scp_share {
+			no-map;
+			size = <0 0x00300000>;
+			alignment = <0 0x1000000>;
+			alloc-ranges = <0 0x40000000 0 0x50000000>;
+		};
+
+		ion-carveout-heap {
+			no-map;
+			size = <0 0xc000>;
+			alignment = <0 0x1000>;
+			alloc-ranges = <0 0x40000000 0 0x80000000>;
+		};
+
+		consys-reserve-memory {
+			no-map;
+			size = <0 0x400000>;
+			alignment = <0 0x1000000>;
+			alloc-ranges = <0 0x40000000 0 0x80000000>;
+		};
+
+		wifi_mem: wifi-reserve-memory {
+			compatible = "shared-dma-pool";
+			no-map;
+			size = <0 0x300000>;
+			alignment = <0 0x1000000>;
+			alloc-ranges = <0 0x40000000 0 0x80000000>;
+		};
+
+		reserve-memory-adsp_share {
+			no-map;
+			size = <0 0x1000000>;
+			alignment = <0 0x1000>;
+			alloc-ranges = <0 0x40000000 0 0x40000000>;
+		};
+	};
+
+	gic: interrupt-controller {
+		compatible = "arm,gic-v3";
+		#interrupt-cells = <3>;
+		#address-cells = <2>;
+		#size-cells = <2>;
+		#redistributor-regions = <1>;
+		interrupt-parent = <&gic>;
+		interrupt-controller;
+		reg = <0 0x0c000000 0 0x40000>,
+		      <0 0x0c040000 0 0x200000>,
+		      <0 0x0c53a650 0 0x50>;
+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	sysirq: intpol-controller@0 {
+		compatible = "mediatek,mt6577-sysirq";
+		interrupt-controller;
+		#interrupt-cells = <3>;
+		interrupt-parent = <&gic>;
+		reg = <0 0x0c53a650 0 0x50>;
+	};
+
+	clocks {
+		clk_null: clk_null {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <0>;
+		};
+
+		clk26m: clk26m {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <26000000>;
+		};
+
+		clk32k: clk32k {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <32000>;
+		};
+	};
+
+	timer {
+		compatible = "arm,armv8-timer";
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+				<GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+				<GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+				<GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+		clock-frequency = <13000000>;
+	};
+};
